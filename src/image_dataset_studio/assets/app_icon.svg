@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1024" height="1024" viewBox="0 0 1254 1254">
+  <title>Image Dataset Studio — open cardboard box</title>
+  <desc>Vector reconstruction of the supplied icon, using paths and gradients only.</desc>
+  <defs>
+    <path id="plate" d="M 355 93 H 900
+      C 1075 93 1165 183 1165 358 V 883
+      C 1165 1058 1075 1146 900 1146 H 355
+      C 179 1146 89 1058 89 883 V 358
+      C 89 183 179 93 355 93 Z"/>
+    <linearGradient id="plateFill" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#fffefd"/>
+      <stop offset="1" stop-color="#fcfbf8"/>
+    </linearGradient>
+    <linearGradient id="backLeft" x1="210" y1="365" x2="627" y2="400"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#edbe84"/>
+      <stop offset="1" stop-color="#eabb81"/>
+    </linearGradient>
+    <linearGradient id="backRight" x1="627" y1="400" x2="1044" y2="365"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#eabb81"/>
+      <stop offset="1" stop-color="#edbe84"/>
+    </linearGradient>
+    <linearGradient id="insideLeft" x1="327" y1="475" x2="627" y2="580"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#935f31"/>
+      <stop offset="1" stop-color="#996637"/>
+    </linearGradient>
+    <linearGradient id="insideRight" x1="627" y1="420" x2="929" y2="555"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a66c3a"/>
+      <stop offset="1" stop-color="#aa743f"/>
+    </linearGradient>
+    <linearGradient id="bodyLeft" x1="306" y1="665" x2="627" y2="965"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#c28a50"/>
+      <stop offset="1" stop-color="#bf854d"/>
+    </linearGradient>
+    <linearGradient id="bodyRight" x1="627" y1="965" x2="948" y2="665"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d0985e"/>
+      <stop offset="1" stop-color="#d59e63"/>
+    </linearGradient>
+    <linearGradient id="frontLeft" x1="178" y1="570" x2="627" y2="653"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f1c38a"/>
+      <stop offset="1" stop-color="#edc18a"/>
+    </linearGradient>
+    <linearGradient id="frontRight" x1="627" y1="653" x2="1076" y2="570"
+                    gradientUnits="userSpaceOnUse">
+      <stop stop-color="#edc18a"/>
+      <stop offset="1" stop-color="#f1c38a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Layered vector silhouettes form the soft shadow without raster images or filters. -->
+  <g fill="#343434">
+    <use xlink:href="#plate" transform="translate(-63 -49) scale(1.10)" opacity=".003"/>
+    <use xlink:href="#plate" transform="translate(-58 -44) scale(1.093)" opacity=".004"/>
+    <use xlink:href="#plate" transform="translate(-54 -40) scale(1.086)" opacity=".005"/>
+    <use xlink:href="#plate" transform="translate(-50 -36) scale(1.079)" opacity=".006"/>
+    <use xlink:href="#plate" transform="translate(-45 -31) scale(1.072)" opacity=".007"/>
+    <use xlink:href="#plate" transform="translate(-41 -27) scale(1.065)" opacity=".008"/>
+    <use xlink:href="#plate" transform="translate(-36 -22) scale(1.057)" opacity=".009"/>
+    <use xlink:href="#plate" transform="translate(-31 -17) scale(1.05)" opacity=".010"/>
+    <use xlink:href="#plate" transform="translate(-27 -13) scale(1.043)" opacity=".011"/>
+    <use xlink:href="#plate" transform="translate(-23 -9) scale(1.036)" opacity=".012"/>
+    <use xlink:href="#plate" transform="translate(-18 -4) scale(1.029)" opacity=".013"/>
+    <use xlink:href="#plate" transform="translate(-14 0) scale(1.022)" opacity=".014"/>
+    <use xlink:href="#plate" transform="translate(-9 5) scale(1.014)" opacity=".015"/>
+    <use xlink:href="#plate" transform="translate(-4 10) scale(1.007)" opacity=".016"/>
+    <use xlink:href="#plate" transform="translate(0 14)" opacity=".017"/>
+  </g>
+  <use xlink:href="#plate" fill="url(#plateFill)"/>
+
+  <!-- Lower box walls, behind the front flaps. -->
+  <path fill="url(#bodyLeft)" d="M 306 564 L 627 604 V 999
+    Q 622 999 617 996 L 315 853 Q 306 849 306 837 Z"/>
+  <path fill="url(#bodyRight)" d="M 627 604 L 948 564 V 837
+    Q 948 847 939 852 L 636 996 Q 631 999 627 999 Z"/>
+
+  <!-- Rear flaps. -->
+  <path fill="url(#backLeft)" d="M 322 475 L 214 379
+    Q 205 370 215 364 L 493 261 Q 502 256 509 263 L 627 370 Z"/>
+  <path fill="url(#backRight)" d="M 627 370 L 745 263
+    Q 752 256 761 261 L 1039 364 Q 1049 370 1040 379 L 932 475 Z"/>
+
+  <!-- The central crease divides the two inner faces. -->
+  <path fill="url(#insideLeft)" d="M 322 475 L 627 369 V 605 Z"/>
+  <path fill="url(#insideRight)" d="M 627 369 L 932 475 L 627 605 Z"/>
+
+  <!-- Front flaps with gently rounded exposed corners. -->
+  <path fill="url(#frontLeft)" d="M 321 475 L 627 605 L 485 715
+    Q 478 720 470 716 L 185 587 Q 174 582 181 574
+    L 309 477 Q 314 473 321 475 Z"/>
+  <path fill="url(#frontRight)" d="M 627 605 L 933 475
+    Q 940 473 945 477 L 1073 574 Q 1080 582 1069 587
+    L 784 716 Q 776 720 769 715 Z"/>
+</svg>

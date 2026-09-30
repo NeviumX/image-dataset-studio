@@ -1,0 +1,27 @@
+.venv/
+.venv-cpu/
+.venv-cuda/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+.cache/
+*.log
+
+# Local documents and development settings
+/docs/
+/.agents/
+/.codex/
+/.idea/
+/.vscode/
+.env
+.env.*
+/dependency-check.json
+
+# OS metadata
+Thumbs.db
+Desktop.ini
+.DS_Store
