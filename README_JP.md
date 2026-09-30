@@ -44,4 +44,4 @@ Pythonと依存関係は自動で導入します。CPU・CUDA用の環境を作�
 .\scripts\build.ps1
 ```
 
-出力は `dist\ImageDatasetStudio\` です。配布する場合はフォルダー全体が必要です。
+出力は `dist\ImageDatasetStudio\` です。

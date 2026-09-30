@@ -44,4 +44,4 @@ Models are downloaded on first use. For PixAI and Florence-2, enable **Allow Thi
 .\scripts\build.ps1
 ```
 
-The output is `dist\ImageDatasetStudio\`. Distribute the entire folder.
+The output is `dist\ImageDatasetStudio\`. 
