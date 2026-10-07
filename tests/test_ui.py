@@ -20,7 +20,7 @@ from image_dataset_studio.models import ModelSpec
 from image_dataset_studio.storage import load_dataset
 from image_dataset_studio.translations import set_language
 from image_dataset_studio.ui.main_window import TAG_CATEGORY_COLORS, MainWindow
-from image_dataset_studio.ui.widgets import AddTagDialog, RenameTagDialog
+from image_dataset_studio.ui.widgets import AddTagDialog, RenameTagDialog, SortTagsDialog
 from image_dataset_studio.workers import TaggingJob
 
 
@@ -164,6 +164,67 @@ def test_clear_one_images_tags_and_caption_with_undo_redo(qtbot, tmp_path, monke
                                           QItemSelectionModel.SelectionFlag.Select)
     assert not window.clear_tags_button.isEnabled()
     assert not window.clear_caption_button.isEnabled()
+    monkeypatch.setattr(window, 'confirm_unsaved', lambda: True)
+    window.close()
+
+
+@pytest.mark.parametrize(('mode', 'expected'), [
+    (0, [['alpha', 'beta', 'zebra'], ['beta', 'zebra']]),
+    (1, [['beta', 'zebra', 'alpha'], ['beta', 'zebra']]),
+    (2, [['beta', 'alpha', 'zebra'], ['zebra', 'beta']]),
+    (3, [['alpha', 'zebra', 'beta'], ['beta', 'zebra']]),
+])
+def test_sort_dialog_applies_to_selected_images_with_undo_redo(
+        qtbot, tmp_path, monkeypatch, mode, expected):
+    config = tmp_path / 'settings'
+    config.mkdir()
+    images = tmp_path / 'images'
+    images.mkdir()
+    original = [['zebra', 'alpha', 'beta'], ['beta', 'zebra'], ['beta', 'alpha']]
+    for name, tags in zip(('a', 'b', 'c'), original, strict=True):
+        Image.new('RGB', (20, 20)).save(images / f'{name}.png')
+        (images / f'{name}.txt').write_text(', '.join(tags), encoding='utf-8')
+    window = MainWindow(config)
+    qtbot.addWidget(window)
+    window.dataset_loaded(load_dataset(images))
+    window.images.selectionModel().select(window.image_model.index(1),
+                                          QItemSelectionModel.SelectionFlag.Select)
+    for row in range(window.tags.topLevelItemCount()):
+        item = window.tags.topLevelItem(row)
+        item.setSelected(item.data(0, Qt.ItemDataRole.UserRole) == 'alpha')
+    monkeypatch.setattr('image_dataset_studio.ui.main_window.random.shuffle',
+                        lambda tags: tags.reverse())
+
+    def accept(dialog):
+        assert [dialog.mode.itemText(i) for i in range(dialog.mode.count())] == [
+            'アルファベット順', '頻度順', 'ランダム', '選択タグを先頭へ']
+        dialog.mode.setCurrentIndex(mode)
+        return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(SortTagsDialog, 'exec', accept)
+    click_tool(window, '選択画像のタグを並べ替え', qtbot)
+
+    def orders():
+        return [[tag.name for tag in record.tags] for record in window.dataset.records]
+
+    assert orders() == expected + [original[2]]
+    window.undo()
+    assert orders() == original
+    window.redo()
+    assert orders() == expected + [original[2]]
+    assert (images / 'a.txt').read_text(encoding='utf-8') == ', '.join(original[0])
+    history_length = len(window.dataset.undo_stack)
+
+    def cancel(dialog):
+        assert dialog.mode.currentIndex() == mode
+        dialog.mode.setCurrentIndex((mode + 1) % 4)
+        return QDialog.DialogCode.Rejected
+
+    monkeypatch.setattr(SortTagsDialog, 'exec', cancel)
+    click_tool(window, '選択画像のタグを並べ替え', qtbot)
+    assert orders() == expected + [original[2]]
+    assert len(window.dataset.undo_stack) == history_length
+    assert window._sort_mode == mode
     monkeypatch.setattr(window, 'confirm_unsaved', lambda: True)
     window.close()
 

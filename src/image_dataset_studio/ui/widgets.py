@@ -113,6 +113,25 @@ class TextPromptDialog(QDialog):
         form.addRow(buttons)
 
 
+class SortTagsDialog(QDialog):
+    def __init__(self, mode=0, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle(tr(msg.dialog_SortTags))
+        self.setMinimumWidth(390)
+        form = QFormLayout(self)
+        self.mode = QComboBox(self)
+        for entry in (msg.option_SortName, msg.option_SortFrequency,
+                      msg.option_SortRandom, msg.option_SortSelectedFirst):
+            self.mode.addItem(tr(entry))
+        self.mode.setCurrentIndex(mode)
+        form.addRow(tr(msg.label_SortMethod), self.mode)
+        buttons = dialog_buttons(QDialogButtonBox(QDialogButtonBox.StandardButton.Ok |
+                                                  QDialogButtonBox.StandardButton.Cancel))
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        form.addRow(buttons)
+
+
 class AddTagDialog(QDialog):
     def __init__(self, parent=None, *, show_position=True, global_positions=False, tag_names=()):
         super().__init__(parent)

@@ -71,6 +71,7 @@ from .widgets import (
     ImageListModel,
     Preview,
     RenameTagDialog,
+    SortTagsDialog,
     TagGridDelegate,
     TagInput,
     TagTree,
@@ -138,6 +139,7 @@ class MainWindow(QMainWindow):
         self._pending_vocabulary_load = False
         self._caption_edit_session = 0
         self._updating_caption_editor = False
+        self._sort_mode = 0
         self._nl_settings = {}
         self._current_model_spec = None
         self.refreshing = False
@@ -387,11 +389,6 @@ class MainWindow(QMainWindow):
         selected_tools.addStretch()
         tag_row.addLayout(selected_tools)
         ml.addLayout(tag_row, 1)
-        self.sort_mode = QComboBox()
-        self.bind_combo(self.sort_mode, [msg.option_SortName, msg.option_SortFrequency,
-                                         msg.option_SortRandom, msg.option_SortSelectedFirst])
-        self.bind(self.sort_mode, msg.tooltip_SortOrder, "setToolTip")
-        ml.addWidget(self.sort_mode)
         caption_header = QHBoxLayout()
         self.caption_label = self.label(msg.label_Caption)
         caption_header.addWidget(self.caption_label)
@@ -402,6 +399,14 @@ class MainWindow(QMainWindow):
         self.clear_caption_button.setEnabled(False)
         ml.addLayout(caption_header)
         self.caption_editor = QPlainTextEdit()
+        caption_palette = self.caption_editor.palette()
+        for role, color in {
+            QPalette.ColorRole.Base: "#2b3038",
+            QPalette.ColorRole.Text: "#8c9ab0",
+            QPalette.ColorRole.PlaceholderText: "#8c9ab0",
+        }.items():
+            caption_palette.setColor(QPalette.ColorGroup.Disabled, role, QColor(color))
+        self.caption_editor.setPalette(caption_palette)
         self.caption_editor.setPlaceholderText(tr(msg.placeholder_Caption))
         self._language_callbacks.append(lambda: self.caption_editor.setPlaceholderText(
             tr(msg.placeholder_Caption)))
@@ -1081,7 +1086,14 @@ class MainWindow(QMainWindow):
             self.refresh_all()
 
     def sort_tags(self):
-        mode = self.sort_mode.currentIndex()
+        records = self.require_targets()
+        if not records:
+            return
+        dialog = SortTagsDialog(self._sort_mode, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        mode = dialog.mode.currentIndex()
+        self._sort_mode = mode
         counts = tag_counts(self.dataset.records) if self.dataset else {}
         selected = {tag_key(n) for n in self.selected_tag_names()}
         def sort(tags):
@@ -1093,7 +1105,7 @@ class MainWindow(QMainWindow):
                 random.shuffle(tags)
                 return tags
             return sorted(tags, key=lambda t: tag_key(t.name) not in selected)
-        self.transform(tr(msg.history_Sort), sort)
+        self.transform(tr(msg.history_Sort), sort, records)
 
     def reorder_tags(self, *_):
         records = self.selected_records()
