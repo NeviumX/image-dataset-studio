@@ -992,6 +992,15 @@ def test_language_switch_updates_ui_and_keeps_unsaved_tags(qtbot, tmp_path, monk
     (images / 'a.txt').write_text('old', encoding='utf-8')
     window = MainWindow(config)
     qtbot.addWidget(window)
+    assert window.dataset is None
+    assert not window.caption_editor.isEnabled()
+    assert window.caption_editor.placeholderText() == '画像を1枚選択すると自然文を編集できます'
+    window.language_actions['EN'].trigger()
+    assert window.caption_editor.placeholderText() == 'Select one image to edit its caption'
+    assert window.dataset is None and not window.caption_editor.isEnabled()
+    window.language_actions['JP'].trigger()
+    assert window.caption_editor.placeholderText() == '画像を1枚選択すると自然文を編集できます'
+    assert window.dataset is None and not window.caption_editor.isEnabled()
     window.dataset_loaded(load_dataset(images))
     record = window.dataset.records[0]
     window.dataset.transform('test', [record], lambda tags: tags + [Tag('new')])

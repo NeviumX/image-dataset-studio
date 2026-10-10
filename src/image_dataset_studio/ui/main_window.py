@@ -407,9 +407,11 @@ class MainWindow(QMainWindow):
         }.items():
             caption_palette.setColor(QPalette.ColorGroup.Disabled, role, QColor(color))
         self.caption_editor.setPalette(caption_palette)
-        self.caption_editor.setPlaceholderText(tr(msg.placeholder_Caption))
-        self._language_callbacks.append(lambda: self.caption_editor.setPlaceholderText(
-            tr(msg.placeholder_Caption)))
+        def update_caption_placeholder():
+            self.caption_editor.setPlaceholderText(tr(msg.placeholder_Caption))
+            self.caption_editor.viewport().update()
+        self._language_callbacks.append(update_caption_placeholder)
+        update_caption_placeholder()
         self.caption_editor.setFixedHeight(90)
         self.caption_editor.textChanged.connect(self.caption_text_changed)
         ml.addWidget(self.caption_editor)
